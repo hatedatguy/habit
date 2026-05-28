@@ -83,7 +83,7 @@ const themePresets: Record<string, ThemePreset> = {
 export default function App() {
   // Google Sign-In simulating active email and persistent cloud storage
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-  const [userEmail, setUserEmail] = useState<string>("darielletjai@gmail.com");
+  const [userEmail, setUserEmail] = useState<string>("n0v@5t4rdu5t@email.com");
 
   // Health and Multiplier States
   const [hp, setHp] = useState<number>(100);
@@ -699,7 +699,7 @@ export default function App() {
               onClick={() => {
                 if (!userEmail || !userEmail.includes("@")) {
                   playSound("error");
-                  alert("Please enter a valid Google account credentials email (e.g. darielletjai@gmail.com) to synchronize!");
+                  alert("Please enter a valid Google account credentials email (e.g. n0v@5t4rdu5t@email.com) to synchronize!");
                   return;
                 }
                 playSound("success");
@@ -719,7 +719,7 @@ export default function App() {
           </div>
 
           <div className="text-[10px] text-[#9D96C4]/60 font-spacemono">
-            Secure sandbox simulation accredited under darielletjai
+            Secure sandbox simulation accredited under Nova Stardust
           </div>
         </div>
       </div>
