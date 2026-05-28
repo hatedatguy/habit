@@ -1,0 +1,6 @@
+{
+  "name": "Celestial Growth",
+  "description": "A gamified celestial-themed habit tracker with threat tracking, leveling, calendar, and reward shop.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
