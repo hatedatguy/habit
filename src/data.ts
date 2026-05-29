@@ -506,3 +506,71 @@ export const initialFoodItems: FoodItem[] = [
     buffValue: "+50% bonus XP from Bosses and Tasks"
   }
 ];
+
+export interface LevelDetail {
+  lvl: number;
+  name: string;
+  region: string;
+  multiplier: string;
+  perks: string[];
+  visualTheme: string;
+  trophy: string;
+}
+
+export const levelMetadata: LevelDetail[] = [
+  {
+    lvl: 1,
+    name: "The Beginning",
+    region: "Novice Forest 🌲",
+    multiplier: "1.0x baseline",
+    perks: ["Unlock standard shirts", "Base HP protection limits"],
+    visualTheme: "Emerald Leaves (Default Green)",
+    trophy: "Cosmic Novice Medal 🥈"
+  },
+  {
+    lvl: 2,
+    name: "Cosmic Spark",
+    region: "Novice Forest 🌲",
+    multiplier: "1.2x coins scale",
+    perks: ["Unlock basic robes", "+5 HP restoration offset"],
+    visualTheme: "Emerald Leaves (Default Green)",
+    trophy: "Cosmic Spark Emblem (Claimable)"
+  },
+  {
+    lvl: 3,
+    name: "Celestial Prodigy",
+    region: "Iron Fortress 🏰",
+    multiplier: "1.4x coins scale",
+    perks: ["Unlock Mystic Shield 🛡️", "Gain 20% passive boss resistance"],
+    visualTheme: "Royal Indigo Shielding",
+    trophy: "Iron Focus Sigil 🛡️"
+  },
+  {
+    lvl: 4,
+    name: "Nebula Walker",
+    region: "Iron Fortress 🏰",
+    multiplier: "1.7x coins scale",
+    perks: ["Unlock custom space caps", "Halve damage from missed posture scans"],
+    visualTheme: "Royal Indigo Shielding",
+    trophy: "Nebula Compass (Ascending)"
+  },
+  {
+    lvl: 5,
+    name: "Quantum Sovereign",
+    region: "Cosmic Citadel 🌌",
+    multiplier: "2.0x peak coins modifier",
+    perks: ["Unlock Wraith Slayer Crown 👑", "Full customization items menu"],
+    visualTheme: "Pulsing Obsidian Void",
+    trophy: "Wraith Slayer Crown 👑"
+  },
+  {
+    lvl: 10,
+    name: "Solar Monarch",
+    region: "Cosmic Citadel 🌌",
+    multiplier: "3.0x supreme scale",
+    perks: ["Unlock Moon Crown 👑", "Infinite stardust trails visual", "Shield absorbed feedback increased"],
+    visualTheme: "Golden Zenith Eclipse",
+    trophy: "Celestial Insignia 🔮"
+  }
+];
+

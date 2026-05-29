@@ -226,27 +226,30 @@ export function CharacterSvg({ equipped, rotationIndex, level = 1 }: CharacterPr
           {/* C. CORE CHUBBY GREY BODY/TORSO (id="char-body") */}
           <g id="char-body" style={{ transform: getBodyTransform() }}>
             <ellipse cx="100" cy="115" rx="36" ry="31" fill={getSkinColor()} />
+            {/* Skin-colored connected upper arms to link shoulders to hand wrists under sleeves */}
+            <line x1="72" y1="104" x2="48" y2="118" stroke={getSkinColor()} strokeWidth="14" strokeLinecap="round" />
+            <line x1="128" y1="104" x2="152" y2="118" stroke={getSkinColor()} strokeWidth="14" strokeLinecap="round" />
           </g>
 
           {/* D. SWAPPABLE SHIRT COVERS (id="char-shirt") */}
           <g id="char-shirt" style={{ transform: getBodyTransform() }}>
             {equipped.top === "default-tee" && (
               <g>
-                {/* Short Sleeves */}
-                <rect x="56" y="102" width="16" height="24" rx="6" fill="#F0F0F5" transform="rotate(30, 64, 108)" />
-                <rect x="128" y="102" width="16" height="24" rx="6" fill="#F0F0F5" transform="rotate(-30, 136, 108)" />
+                {/* Short Sleeves aligned to arm segment 72,104 to 48,118 */}
+                <line x1="72" y1="104" x2="58" y2="112" stroke="#F0F0F5" strokeWidth="18" strokeLinecap="round" />
+                <line x1="128" y1="104" x2="142" y2="112" stroke="#F0F0F5" strokeWidth="18" strokeLinecap="round" />
                 {/* Tee Body */}
                 <rect x="68" y="100" width="64" height="36" rx="8" fill="#F0F0F5" />
-                {/* Collar Cut exposing grey neck skin */}
+                {/* Collar Cut exposing neck skin */}
                 <path d="M 86 100 Q 100 114 114 100 Z" fill={getSkinColor()} />
               </g>
             )}
 
             {equipped.top === "midnight-hoodie" && (
               <g>
-                {/* Midnight Thick Full Sleeves */}
-                <rect x="54" y="100" width="18" height="28" rx="8" fill="#1C1C35" transform="rotate(30, 63, 108)" />
-                <rect x="128" y="100" width="18" height="28" rx="8" fill="#1C1C35" transform="rotate(-30, 137, 108)" />
+                {/* Midnight Thick Full Sleeves overlaying arms */}
+                <line x1="72" y1="104" x2="52" y2="116" stroke="#1C1C35" strokeWidth="19" strokeLinecap="round" />
+                <line x1="128" y1="104" x2="148" y2="116" stroke="#1C1C35" strokeWidth="19" strokeLinecap="round" />
                 {/* Hoodie Main Torso */}
                 <rect x="66" y="98" width="68" height="39" rx="10" fill="#1C1C35" />
                 {/* Front Hood Collar pouch loops */}
@@ -259,8 +262,8 @@ export function CharacterSvg({ equipped, rotationIndex, level = 1 }: CharacterPr
             {equipped.top === "lavender-crop" && (
               <g>
                 {/* Thin Lavender Crop Sleeves */}
-                <rect x="58" y="102" width="14" height="16" rx="5" fill="#B2A4FF" transform="rotate(25, 65, 108)" />
-                <rect x="128" y="102" width="14" height="16" rx="5" fill="#B2A4FF" transform="rotate(-25, 135, 108)" />
+                <line x1="72" y1="104" x2="60" y2="110" stroke="#B2A4FF" strokeWidth="16" strokeLinecap="round" />
+                <line x1="128" y1="104" x2="140" y2="110" stroke="#B2A4FF" strokeWidth="16" strokeLinecap="round" />
                 {/* Lavender Crop Body block */}
                 <rect x="68" y="100" width="64" height="22" rx="6" fill="#B2A4FF" />
                 {/* Rounded neck cut */}
@@ -271,10 +274,13 @@ export function CharacterSvg({ equipped, rotationIndex, level = 1 }: CharacterPr
             {equipped.top === "celestial-jacket" && (
               <g>
                 {/* Deep Purple Star Sleeves with golden bands */}
-                <rect x="54" y="100" width="18" height="26" rx="6" fill="#4D3C9D" transform="rotate(30, 63, 108)" />
-                <rect x="128" y="100" width="18" height="26" rx="6" fill="#4D3C9D" transform="rotate(-30, 137, 108)" />
-                <rect x="50" y="118" width="12" height="6" rx="2" fill="#FFD166" transform="rotate(30, 56, 121)" />
-                <rect x="138" y="118" width="12" height="6" rx="2" fill="#FFD166" transform="rotate(-30, 144, 121)" />
+                <line x1="72" y1="104" x2="55" y2="114" stroke="#4D3C9D" strokeWidth="18" strokeLinecap="round" />
+                <line x1="128" y1="104" x2="145" y2="114" stroke="#4D3C9D" strokeWidth="18" strokeLinecap="round" />
+                
+                {/* Perfect inline gold cuffs segment */}
+                <line x1="55" y1="114" x2="51" y2="116" stroke="#FFD166" strokeWidth="18" strokeLinecap="round" />
+                <line x1="145" y1="114" x2="149" y2="116" stroke="#FFD166" strokeWidth="18" strokeLinecap="round" />
+
                 {/* Double Breast Coat base */}
                 <rect x="66" y="98" width="68" height="38" rx="8" fill="#4D3C9D" />
                 {/* Gold lapel ornaments and undershirt triangle overlap */}
@@ -290,7 +296,9 @@ export function CharacterSvg({ equipped, rotationIndex, level = 1 }: CharacterPr
 
             {equipped.top === "sakura-kimono" && (
               <g>
-                {/* Pink flowing Japanese wrapper lapels */}
+                {/* Pink flowing Japanese wrapper lapels covering arms elegantly */}
+                <line x1="72" y1="104" x2="52" y2="116" stroke="#FFB6C1" strokeWidth="18" strokeLinecap="round" />
+                <line x1="128" y1="104" x2="148" y2="116" stroke="#FFB6C1" strokeWidth="18" strokeLinecap="round" />
                 <path d="M 46 102 Q 58 98 70 102 L 64 128 L 42 120 Z" fill="#FFB6C1" />
                 <path d="M 154 102 Q 142 98 130 102 L 136 128 L 158 120 Z" fill="#FFB6C1" />
                 {/* Main wrap fold */}
@@ -307,8 +315,8 @@ export function CharacterSvg({ equipped, rotationIndex, level = 1 }: CharacterPr
             {equipped.top === "solar-hoodie" && (
               <g>
                 {/* Bright Orange full hoodie */}
-                <rect x="54" y="100" width="18" height="28" rx="8" fill="#FF6B4A" transform="rotate(30, 63, 108)" />
-                <rect x="128" y="100" width="18" height="28" rx="8" fill="#FF6B4A" transform="rotate(-30, 137, 108)" />
+                <line x1="72" y1="104" x2="52" y2="116" stroke="#FF6B4A" strokeWidth="19" strokeLinecap="round" />
+                <line x1="128" y1="104" x2="148" y2="116" stroke="#FF6B4A" strokeWidth="19" strokeLinecap="round" />
                 <rect x="66" y="98" width="68" height="39" rx="10" fill="#FF6B4A" />
                 {/* Fiery yellow cords with points */}
                 <line x1="94" y1="106" x2="94" y2="119" stroke="#FFD166" strokeWidth="2" strokeLinecap="round" />
@@ -530,35 +538,43 @@ export function MiniCharacterPreview({ itemId, type, equipped, level = 1 }: { it
           {/* Round torso */}
           <ellipse cx="100" cy="80" rx="25" ry="22" fill={getSkinColor()} />
 
+          {/* Skin-colored connected arms for small preview */}
+          <line x1="80" y1="72" x2="64" y2="82" stroke={getSkinColor()} strokeWidth="9" strokeLinecap="round" />
+          <line x1="120" y1="72" x2="136" y2="82" stroke={getSkinColor()} strokeWidth="9" strokeLinecap="round" />
+
           {/* Torso Top Outfit */}
           {previewEquipped.top === "default-tee" && (
             <g>
-              <rect x="68" y="72" width="11" height="15" rx="4" fill="#F0F0F5" transform="rotate(30, 74, 78)" />
-              <rect x="121" y="72" width="11" height="15" rx="4" fill="#F0F0F5" transform="rotate(-30, 126, 78)" />
+              {/* Short Sleeves aligned to mini arm segment 80,72 to 64,82 */}
+              <line x1="80" y1="72" x2="68" y2="78" stroke="#F0F0F5" strokeWidth="11" strokeLinecap="round" />
+              <line x1="120" y1="72" x2="132" y2="78" stroke="#F0F0F5" strokeWidth="11" strokeLinecap="round" />
               <rect x="78" y="70" width="44" height="25" rx="5" fill="#F0F0F5" />
               <path d="M 90 70 Q 100 78 110 70 Z" fill={getSkinColor()} />
             </g>
           )}
           {previewEquipped.top === "midnight-hoodie" && (
             <g>
-              <rect x="68" y="72" width="12" height="18" rx="5" fill="#1C1C35" transform="rotate(30, 74, 78)" />
-              <rect x="120" y="72" width="12" height="18" rx="5" fill="#1C1C35" transform="rotate(-30, 126, 78)" />
+              {/* Thick full sleeves overlaying mini arms */}
+              <line x1="80" y1="72" x2="66" y2="81" stroke="#1C1C35" strokeWidth="12" strokeLinecap="round" />
+              <line x1="120" y1="72" x2="134" y2="81" stroke="#1C1C35" strokeWidth="12" strokeLinecap="round" />
               <rect x="76" y="69" width="48" height="27" rx="7" fill="#1C1C35" />
               <ellipse cx="100" cy="69" rx="14" ry="4" fill="#111124" />
             </g>
           )}
           {previewEquipped.top === "lavender-crop" && (
             <g>
-              <rect x="70" y="72" width="9" height="10" rx="3" fill="#B2A4FF" transform="rotate(25, 75, 77)" />
-              <rect x="121" y="72" width="9" height="10" rx="3" fill="#B2A4FF" transform="rotate(-25, 125, 77)" />
+              {/* Lavender Crop Sleeves */}
+              <line x1="80" y1="72" x2="70" y2="78" stroke="#B2A4FF" strokeWidth="10" strokeLinecap="round" />
+              <line x1="120" y1="72" x2="130" y2="78" stroke="#B2A4FF" strokeWidth="10" strokeLinecap="round" />
               <rect x="78" y="70" width="44" height="15" rx="4" fill="#B2A4FF" />
               <path d="M 91 70 Q 100 76 109 70 Z" fill={getSkinColor()} />
             </g>
           )}
           {previewEquipped.top === "celestial-jacket" && (
             <g>
-              <rect x="68" y="72" width="12" height="16" rx="4" fill="#4D3C9D" transform="rotate(30, 74, 78)" />
-              <rect x="120" y="72" width="12" height="16" rx="4" fill="#4D3C9D" transform="rotate(-30, 126, 78)" />
+              {/* Deep Purple mini jacket sleeves overlay */}
+              <line x1="80" y1="72" x2="66" y2="81" stroke="#4D3C9D" strokeWidth="11" strokeLinecap="round" />
+              <line x1="120" y1="72" x2="134" y2="81" stroke="#4D3C9D" strokeWidth="11" strokeLinecap="round" />
               <rect x="76" y="69" width="48" height="26" rx="6" fill="#4D3C9D" />
               <polygon points="100,69 88,69 100,86" fill="#FFF" />
               <polygon points="100,69 112,69 100,86" fill="#FFF" />
@@ -566,14 +582,18 @@ export function MiniCharacterPreview({ itemId, type, equipped, level = 1 }: { it
           )}
           {previewEquipped.top === "sakura-kimono" && (
             <g>
+              {/* Flowing mini kimono arms */}
+              <line x1="80" y1="72" x2="66" y2="81" stroke="#FFB6C1" strokeWidth="11" strokeLinecap="round" />
+              <line x1="120" y1="72" x2="134" y2="81" stroke="#FFB6C1" strokeWidth="11" strokeLinecap="round" />
               <path d="M 78 70 Q 100 68 122 70 L 120 95 L 80 95 Z" fill="#FFB6C1" />
               <rect x="79" y="84" width="42" height="9" fill="#FF6B8A" />
             </g>
           )}
           {previewEquipped.top === "solar-hoodie" && (
             <g>
-              <rect x="68" y="72" width="12" height="18" rx="5" fill="#FF6B4A" transform="rotate(30, 74, 78)" />
-              <rect x="120" y="72" width="12" height="18" rx="5" fill="#FF6B4A" transform="rotate(-30, 126, 78)" />
+              {/* Bright orange mini hoodie sleeves */}
+              <line x1="80" y1="72" x2="66" y2="81" stroke="#FF6B4A" strokeWidth="12" strokeLinecap="round" />
+              <line x1="120" y1="72" x2="134" y2="81" stroke="#FF6B4A" strokeWidth="12" strokeLinecap="round" />
               <rect x="76" y="69" width="48" height="27" rx="7" fill="#FF6B4A" />
               <circle cx="100" cy="80" r="3.5" fill="#FFD166" />
             </g>

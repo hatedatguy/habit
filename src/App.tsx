@@ -31,7 +31,7 @@ import {
   Palette
 } from "lucide-react";
 import { Difficulty, Habit, Enemy, ShopItem, CalendarDay, ToastMessage, FoodItem } from "./types";
-import { initialHabits, initialEnemies, initialShopItems, generateCalendarDays, initialFoodItems } from "./data";
+import { initialHabits, initialEnemies, initialShopItems, generateCalendarDays, initialFoodItems, levelMetadata } from "./data";
 import { CharacterSvg, MiniCharacterPreview } from "./components/CharacterWidget";
 
 interface ThemePreset {
@@ -84,6 +84,9 @@ export default function App() {
   // Google Sign-In simulating active email and persistent cloud storage
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const [userEmail, setUserEmail] = useState<string>("n0v@5t4rdu5t@email.com");
+
+  // Selection for level difference comparison tab
+  const [selectedCompLevel, setSelectedCompLevel] = useState<number>(3);
 
   // Health and Multiplier States
   const [hp, setHp] = useState<number>(100);
@@ -1224,14 +1227,14 @@ export default function App() {
                       Nova Stardust
                     </h2>
                     <p className="text-xs text-[#9D96C4] tracking-wide mt-1 font-spacemono">
-                      Level 5 · Full Customisation
+                      Level {level} · {getLevelName(level).split(":")[1]?.trim() || "Novice Novice"}
                     </p>
 
                     {/* Side-by-side Mini cards of stats inside Hero */}
                     <div className="grid grid-cols-2 gap-2.5 w-full mt-4">
                       <div className="bg-white/5 border border-white/5 rounded-xl p-2 flex flex-col items-center justify-center">
                         <span className="text-xs font-spacemono font-bold text-[#8974F2]">
-                          24,500 XP ⭐
+                          {cumulativeXp.toLocaleString()} Cumulative XP ⭐
                         </span>
                       </div>
                       <div className="bg-white/5 border border-white/5 rounded-xl p-2 flex flex-col items-center justify-center">
@@ -1307,28 +1310,33 @@ export default function App() {
                   </section>
 
                   {/* EVOLUTION MILESTONES ROW */}
-                  <section className="glass-card p-4 space-y-3.5">
-                    <h3 className="text-xs font-cinzel font-bold tracking-wider text-[#F0EEFF]">
-                      Evolution Milestones
-                    </h3>
+                  <section className="glass-card p-4 space-y-3.5 border-white/10">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-xs font-cinzel font-bold tracking-wider text-[#F0EEFF]">
+                        Evolution Milestones
+                      </h3>
+                      <span className="text-[10px] font-spacemono text-[#8974F2] bg-[#8974F2]/10 px-2 py-0.5 rounded">
+                        Current: Lv.{level}
+                      </span>
+                    </div>
 
                     {/* Horizontal Milestones Line Setup */}
                     <div className="flex justify-between items-center relative py-2">
                       {/* Connecting Line Underneath */}
                       <div className="absolute top-[40%] left-4 right-4 h-0.5 bg-[#1C1C35] z-0" />
-                      <div className="absolute top-[40%] left-4 w-1/2 h-0.5 bg-[#8974F2] z-0" />
+                      <div className="absolute top-[40%] left-4 h-0.5 bg-[#8974F2] z-0 transition-all duration-500" style={{ width: `${Math.min(100, Math.max(0, (level - 1) * 25))}%` }} />
 
                       {/* 5 Milestones */}
                       {[
-                        { label: "Lv.1 😶", unlocked: true },
-                        { label: "Lv.2 🌱", unlocked: true },
-                        { label: "Lv.3 😊", unlocked: true },
-                        { label: "Lv.4 😎", unlocked: false },
-                        { label: "Lv.5 🌟", unlocked: false }
+                        { label: "Lv.1 😶", unlocked: level >= 1 },
+                        { label: "Lv.2 🌱", unlocked: level >= 2 },
+                        { label: "Lv.3 😊", unlocked: level >= 3 },
+                        { label: "Lv.4 😎", unlocked: level >= 4 },
+                        { label: "Lv.5 🌟", unlocked: level >= 5 }
                       ].map((ms, index) => {
                         return (
                           <div key={index} className="flex flex-col items-center space-y-1 relative z-10">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 text-[10px] font-spacemono leading-none ${ms.unlocked ? 'bg-[#5B51B3] border-[#8974F2] text-white shadow-[0_0_8px_rgba(137,116,242,0.4)]' : 'bg-[#1C1C35] border-[#4A4A69] text-[#9D96C4]'}`}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 text-[10px] font-spacemono leading-none transition-all duration-300 ${ms.unlocked ? 'bg-[#5B51B3] border-[#8974F2] text-white shadow-[0_0_8px_rgba(137,116,242,0.4)]' : 'bg-[#1C1C35] border-[#4A4A69] text-[#9D96C4]'}`}>
                               {index + 1}
                             </div>
                             <span className="text-[9px] font-semibold text-[#9D96C4] tracking-tight">
@@ -1337,6 +1345,164 @@ export default function App() {
                           </div>
                         );
                       })}
+                    </div>
+                  </section>
+
+                  {/* LEVEL COMPARISON MATRIX & PROGESSION SKIP CENTER */}
+                  <section className="glass-card p-4 space-y-4 border-white/10 relative overflow-hidden">
+                    <div className="flex items-center space-x-1.5">
+                      <span className="text-sm select-none">📊</span>
+                      <h3 className="text-xs font-cinzel font-bold tracking-wider text-[#F0EEFF]">
+                        Level Comparison & Skip Matrix
+                      </h3>
+                    </div>
+
+                    <p className="text-[10px] text-[#9D96C4] leading-relaxed">
+                      Select any level from the tabs below to inspect how rewards, stat multipliers, regional theme skins, and gear shop privileges adapt. Use the skip buttons to simulate instant growth.
+                    </p>
+
+                    {/* Level Selector Tabs */}
+                    <div className="grid grid-cols-6 gap-1 bg-[#141430] p-1 rounded-xl border border-white/5">
+                      {levelMetadata.map((detail) => {
+                        const isCurrent = level === detail.lvl;
+                        const isSelected = selectedCompLevel === detail.lvl;
+                        return (
+                          <button
+                            key={detail.lvl}
+                            onClick={() => {
+                              playSound("switch");
+                              setSelectedCompLevel(detail.lvl);
+                            }}
+                            className={`py-2 rounded-lg text-[10px] font-spacemono font-bold transition-all relative ${isSelected ? 'bg-[#8974F2] text-[#0E0E1A] shadow-md scale-[1.03]' : 'text-[#9D96C4] hover:text-[#F0EEFF] hover:bg-white/5'}`}
+                          >
+                            <span>L.{detail.lvl}</span>
+                            {isCurrent && (
+                              <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-400 border border-[#0E0E1A] animate-pulse" title="Your current level" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Display Matrix of Selected Level Specifications */}
+                    {(() => {
+                      const detail = levelMetadata.find(d => d.lvl === selectedCompLevel) || levelMetadata[0];
+                      const isCurrentUserLevel = level === detail.lvl;
+                      const isWarpAvailable = level !== detail.lvl;
+
+                      return (
+                        <div className="bg-[#141430]/60 rounded-xl p-3 border border-white/5 space-y-3 tab-pane-transition">
+                          {/* Title with Tag */}
+                          <div className="flex justify-between items-center pb-2 border-b border-white/5">
+                            <div>
+                              <div className="text-xs font-bold text-[#F0EEFF] font-cinzel">
+                                {detail.name}
+                              </div>
+                              <span className="text-[9px] font-spacemono text-[#D47EFF] tracking-wide block mt-0.5">
+                                Progression Milestone {selectedCompLevel === 10 ? 'Elite Tier ⭐' : `Tier ${levelMetadata.indexOf(detail) + 1}`}
+                              </span>
+                            </div>
+                            {isCurrentUserLevel ? (
+                              <span className="text-[8px] bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 font-bold px-1.5 py-0.5 rounded font-spacemono uppercase">
+                                Active State
+                              </span>
+                            ) : (
+                              <span className="text-[8px] bg-white/5 border border-white/10 text-[#9D96C4] font-medium px-1.5 py-0.5 rounded font-spacemono uppercase">
+                                {level > detail.lvl ? "Cleared ✓" : "Locked 🔒"}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Stat Grid */}
+                          <div className="grid grid-cols-2 gap-2 text-[10px] sm:text-xs">
+                            <div className="space-y-0.5 bg-white/5 p-2 rounded-lg border border-white/5">
+                              <span className="text-[#9D96C4] block font-spacemono text-[9px] uppercase">🏞️ Region Environment</span>
+                              <strong className="text-[#F0EEFF] font-bold block">{detail.region}</strong>
+                            </div>
+                            <div className="space-y-0.5 bg-white/5 p-2 rounded-lg border border-white/5">
+                              <span className="text-[#9D96C4] block font-spacemono text-[9px] uppercase">🪙 Coins Multiplier</span>
+                              <strong className="text-[#FFD166] font-bold block">{detail.multiplier}</strong>
+                            </div>
+                            <div className="space-y-0.5 bg-white/5 p-2 rounded-lg border border-white/5">
+                              <span className="text-[#9D96C4] block font-spacemono text-[9px] uppercase">🎨 Glow Theme Border</span>
+                              <strong className="text-[#6DACFF] font-medium block">{detail.visualTheme}</strong>
+                            </div>
+                            <div className="space-y-0.5 bg-white/5 p-2 rounded-lg border border-white/5">
+                              <span className="text-[#9D96C4] block font-spacemono text-[9px] uppercase">🏆 High-Tier Medal</span>
+                              <strong className="text-amber-400 font-medium block">{detail.trophy}</strong>
+                            </div>
+                          </div>
+
+                          {/* Perks bullet list */}
+                          <div className="space-y-1.5 pt-1">
+                            <span className="text-[9px] font-bold text-[#8974F2] font-spacemono uppercase tracking-wide block">
+                              ⚔️ Base Perks & Unlock Permissions:
+                            </span>
+                            <div className="space-y-1">
+                              {detail.perks.map((p, idx) => (
+                                <div key={idx} className="flex items-center space-x-1.5 text-[10.5px] text-[#9D96C4]">
+                                  <span className="text-emerald-400">✦</span>
+                                  <span>{p}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Warping Actions */}
+                          {isWarpAvailable && (
+                            <div className="pt-2">
+                              <button
+                                onClick={() => {
+                                  setLevel(detail.lvl);
+                                  // Update streak multiplier scales accordingly too
+                                  if (detail.lvl <= 2) setStreakMultiplier(1.2);
+                                  else if (detail.lvl <= 4) setStreakMultiplier(1.5);
+                                  else setStreakMultiplier(2.0);
+
+                                  playSound("success");
+                                  fireToast(`🌌 Level Skip! Warped directly to Lvl ${detail.lvl}!`, undefined, 50, "reward");
+                                }}
+                                className="w-full h-8 rounded-lg bg-gradient-to-r from-[#8974F2]/30 to-[#D47EFF]/30 hover:from-[#8974F2]/45 hover:to-[#D47EFF]/45 border border-[#8974F2]/50 text-white text-[10px] font-bold tracking-wider uppercase transition-all duration-150 active:scale-95"
+                              >
+                                Warp Jump Level directly to {detail.lvl} ⚡
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
+                    {/* Bottom main Skip row */}
+                    <div className="pt-2 border-t border-white/5 flex space-x-2">
+                      <button
+                        onClick={() => {
+                          const nextLevel = level + 1;
+                          setLevel(nextLevel);
+                          // Adjust multiplier
+                          if (nextLevel <= 2) setStreakMultiplier(1.2);
+                          else if (nextLevel <= 4) setStreakMultiplier(1.5);
+                          else setStreakMultiplier(2.0);
+
+                          playSound("success");
+                          fireToast(`⏩ Advanced character checkpoint to Level ${nextLevel}!`, undefined, 100, "reward");
+                        }}
+                        className="flex-1 h-9.5 rounded-xl bg-[#FF8D9E] hover:bg-[#ff7a8d] text-[#0E0E1A] font-bold text-[11px] tracking-wide flex items-center justify-center gap-1.5 active:scale-95 duration-100 shadow-[0_4px_12px_rgba(255,141,158,0.2)] border-t border-white/10"
+                      >
+                        ⏩ Skip to Level Up (+1)
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setLevel(10);
+                          setStreakMultiplier(3.0);
+                          playSound("success");
+                          fireToast(`👑 Solar Monarch Ascended! Skipped to Level 10!`, undefined, 200, "info");
+                        }}
+                        className="px-3.5 h-9.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/25 text-[#FFD166] border border-amber-500/25 font-bold text-[11px] tracking-wide flex items-center justify-center gap-1 active:scale-95 duration-100"
+                        title="Skip instantly to Level 10 Solar Monarch"
+                      >
+                        👑 Level 10 Bypass
+                      </button>
                     </div>
                   </section>
 
